@@ -1,0 +1,30 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
+terraform {
+  backend "s3" {
+    bucket         = "limtruong-bucket"
+    key            = "state"
+    region         = "us-east-1"
+    dynamodb_table = "limtruong-table"
+  }
+}
+
+module "vpc" {
+  source = "./vpc"
+}
+
+module "ec2" {
+  source         = "./ec2"
+  public_subnet  = module.vpc.public_subnet_id
+  security_group = module.vpc.ec2_sg_id
+}
+
+# output "amazon_mysql_ip" {
+#   value = module.ec2.amazon_mysql_public_ip
+# }
+
+output "amazon_sqlserver_ip" {
+  value = module.ec2.amazon_sqlserver_public_ip
+}
