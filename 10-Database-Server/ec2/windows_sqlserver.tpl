@@ -1,71 +1,66 @@
-#!/bin/bash
+<powershell>
 
-# # Install SQL Server and tools
-# curl -O https://packages.microsoft.com/config/rhel/9/prod.repo
-# sudo mv prod.repo /etc/yum.repos.d/mssql-server.repo
-# sudo dnf clean all -y
-# sudo dnf makecache -y
+# Set registry to enable SQL Server authentication (Mixed Mode)
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQLServer" -Name LoginMode -Value 2
 
-# sudo dnf install -y mssql-server
-# sudo systemctl enable mssql-server
-# sudo systemctl start mssql-server
+# Restart all SQL services
+Get-Service | Where-Object { $_.Name -like "MSSQL*" } | ForEach-Object {
+    Restart-Service $_.Name -Force
+}
 
-# # Set SA password and edition
-# sudo /opt/mssql/bin/mssql-conf setup accept-eula
-# sudo /opt/mssql/bin/mssql-conf set-sa-password 'Limroot@12345678'
-# sudo /opt/mssql/bin/mssql-conf set telemetry.customerfeedback false
-# sudo systemctl restart mssql-server
-# sleep 30
+# Set SA password and enable login
+& sqlcmd -S localhost -Q "ALTER LOGIN sa WITH PASSWORD = 'Limroot@12345678'; ALTER LOGIN sa ENABLE;"
 
-# # Install SQL Server command-line tools
-# sudo dnf install -y unixODBC-devel
-# sudo dnf install -y https://packages.microsoft.com/config/rhel/9/packages-microsoft-prod.rpm
-# sudo dnf install -y mssql-tools18
+# Create db
+$sqlCreateDb = @"
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'limdb')
+BEGIN
+    CREATE DATABASE limdb;
+END;
+"@
+$sqlCreateDb | sqlcmd -S localhost -U sa -P 'Limroot@12345678'
 
-# echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
-# source ~/.bashrc
+Start-Sleep -Seconds 5
 
-# # Create SQL Server using root
-# /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P 'Limroot@12345678' -Q "
-# CREATE DATABASE limdb;
-# GO
-# USE limdb;
-# CREATE LOGIN limtruong WITH PASSWORD = 'Limuser@12345678';
-# CREATE USER limtruong FOR LOGIN limtruong;
-# ALTER ROLE db_owner ADD MEMBER limtruong;
-# "
+# Create user & table 
+$sqlInit = @"
+USE limdb;
+IF NOT EXISTS (SELECT * FROM sys.sql_logins WHERE name = 'limtruong')
+BEGIN
+    CREATE LOGIN limtruong WITH PASSWORD = 'Limuser@12345678';
+    CREATE USER limtruong FOR LOGIN limtruong;
+    ALTER ROLE db_owner ADD MEMBER limtruong;
+END;
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='test' AND xtype='U')
+BEGIN
+    CREATE TABLE test (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        name NVARCHAR(100),
+        email NVARCHAR(100),
+        created_at DATETIME DEFAULT GETDATE()
+    );
+END;
+"@
+$sqlInit | sqlcmd -S localhost -U sa -P 'Limroot@12345678'
 
-# # Create table & insert data
-# insert="/tmp/insert.sql"
-# echo "USE limdb;
-# IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='test' AND xtype='U')
-# BEGIN
-#   CREATE TABLE test (
-#     id INT IDENTITY(1,1) PRIMARY KEY,
-#     name NVARCHAR(100),
-#     email NVARCHAR(100),
-#     created_at DATETIME DEFAULT GETDATE()
-#   );
-# END
-# " > $insert
+# Insert random data
+for ($i = 1; $i -le 50; $i++) {
+    $name = -join ((65..90) + (97..122) | Get-Random -Count 10 | ForEach-Object {[char]$_})
+    $email = (-join ((97..122) | Get-Random -Count 7 | ForEach-Object {[char]$_})) + "@lamsutdeptraivcl.com"
+    $insert = "INSERT INTO limdb.dbo.test (name, email) VALUES (N'$name', N'$email');"
+    $insert | sqlcmd -S localhost -U limtruong -P 'Limuser@12345678'
+}
 
-# for i in $(seq 1 50); do
-#   name=$(cat /dev/urandom | tr -dc A-Za-z | head -c 10)
-#   email="$(cat /dev/urandom | tr -dc a-z | head -c 7)@lamsutdeptraivcl.com"
-#   echo "INSERT INTO test (name, email) VALUES (N'$name', N'$email');" >> $insert
-# done
+# Script backup db
+$backupScript = @"
+sqlcmd -S localhost -U sa -P 'Limroot@12345678' -Q "BACKUP DATABASE limdb TO DISK = 'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\Backup\limdb.bak' WITH INIT"
+"@
+Set-Content -Path "C:\backup.ps1" -Value $backupScript
 
-# /opt/mssql-tools18/bin/sqlcmd -S localhost -U limtruong -P 'Limuser@12345678' -i $insert
+$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-File `"C:\backup.ps1`""
+$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) `
+  -RepetitionInterval (New-TimeSpan -Minutes 1) `
+  -RepetitionDuration ([TimeSpan]::FromDays(365))
+Register-ScheduledTask -TaskName "SQLBackupTask" -Action $action -Trigger $trigger -RunLevel Highest -Force
 
-# # Backup script
-# echo "#!/bin/bash
-# /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P 'Limroot@12345678' -Q \"BACKUP DATABASE limdb TO DISK = '/home/ec2-user/backup.bak' WITH INIT\"
-# " > /home/ec2-user/backup.sh
-
-# sudo chmod +x /home/ec2-user/backup.sh
-
-# # Cron job every minute
-# echo "* * * * * /home/ec2-user/backup.sh" | crontab -
-
-# sudo systemctl enable crond
-# sudo systemctl start crond
+</powershell>

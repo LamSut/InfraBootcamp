@@ -1,6 +1,22 @@
+data "aws_ami" "windows_2022" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["Windows_Server-2022-English-Full-SQL_2022*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["801119661308"]
+}
+
 resource "aws_instance" "windows_sqlserver" {
-  ami                         = var.ami_free_windows
-  instance_type               = var.instance_type_free
+  ami                         = data.aws_ami.windows_2022.id
+  instance_type               = "t2.medium"
   subnet_id                   = var.public_subnet
   associate_public_ip_address = true
   vpc_security_group_ids      = [var.windows_sg]
