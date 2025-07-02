@@ -16,15 +16,16 @@ module "vpc" {
 }
 
 module "ec2" {
-  source         = "./ec2"
-  public_subnet  = module.vpc.public_subnet_id
-  security_group = module.vpc.ec2_sg_id
+  source        = "./ec2"
+  public_subnet = module.vpc.public_subnet_id
+  linux_sg      = module.vpc.linux_sg_id
+  windows_sg    = module.vpc.windows_sg_id
 }
 
 # output "amazon_mysql_ip" {
 #   value = module.ec2.amazon_mysql_public_ip
 # }
 
-output "amazon_sqlserver_ip" {
-  value = module.ec2.amazon_sqlserver_public_ip
+output "windows_sqlserver_ip" {
+  value = module.ec2.windows_sqlserver_public_ip
 }

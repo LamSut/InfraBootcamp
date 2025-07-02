@@ -7,7 +7,9 @@ variable "private_key_name" {
 # Networking
 variable "public_subnet" {}
 
-variable "security_group" {}
+variable "linux_sg" {}
+
+variable "windows_sg" {}
 
 # Free AMIs
 variable "ami_free_amazon" {

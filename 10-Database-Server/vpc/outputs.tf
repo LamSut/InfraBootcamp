@@ -8,7 +8,12 @@ output "public_subnet_id" {
   value       = aws_subnet.public_subnet.id
 }
 
-output "ec2_sg_id" {
+output "linux_sg_id" {
   description = "ID of the EC2 security group"
-  value       = aws_security_group.ec2_sg.id
+  value       = aws_security_group.linux_sg.id
+}
+
+output "windows_sg_id" {
+  description = "ID of the Windows security group"
+  value       = aws_security_group.windows_sg.id
 }
