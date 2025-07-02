@@ -39,5 +39,8 @@ terraform.rc
 # Keys
 keys/*
 
+# Outputs
+terraform-output.txt
+
 # Report
 SA*
