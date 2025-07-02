@@ -44,6 +44,16 @@ module "iam" {
 }
 
 # Outputs
+output "amazon_id" {
+  description = "EC2 instance ID"
+  value       = module.ec2.ec2_amazon_id
+}
+
+output "mysql_identifier" {
+  description = "RDS MySQL instance identifier"
+  value       = module.rds.mysql_identifier
+}
+
 output "mysql_connect_cmd" {
   description = "MySQL CLI connection string"
   value       = "mysql -h ${module.rds.mysql_endpoint} -u limtruong -plimkhietngoingoi limdb"
