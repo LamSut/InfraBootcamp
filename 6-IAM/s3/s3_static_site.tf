@@ -83,3 +83,13 @@ output "static_website_domain" {
   value       = "${aws_s3_bucket.static_site.bucket}.s3-website-${data.aws_region.current.name}.amazonaws.com"
 }
 
+output "s3_uri_index_file" {
+  description = "S3 URI of index.html file"
+  value       = "s3://${aws_s3_bucket.static_site.bucket}/index.html"
+}
+
+output "s3_uri_error_file" {
+  description = "S3 URI of error.html file"
+  value       = "s3://${aws_s3_bucket.static_site.bucket}/error.html"
+}
+

@@ -63,3 +63,13 @@ output "static_website_url" {
   description = "URL to access the static website"
   value       = module.s3_static_site.static_website_url
 }
+
+output "uri_index_file" {
+  description = "S3 URI of index.html file"
+  value       = module.s3_static_site.s3_uri_index_file
+}
+
+output "uri_error_file" {
+  description = "S3 URI of error.html file"
+  value       = module.s3_static_site.s3_uri_error_file
+}
