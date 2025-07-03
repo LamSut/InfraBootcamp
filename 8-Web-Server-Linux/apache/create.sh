@@ -1,5 +1,8 @@
-sudo apt update
+sudo apt update && sudo apt upgrade -y
 sudo apt install -y apache2
+
+sudo systemctl enable apache2
+sudo systemctl start apache2
 
 sudo ./setup/lim1.sh
 sudo ./setup/lim2.sh

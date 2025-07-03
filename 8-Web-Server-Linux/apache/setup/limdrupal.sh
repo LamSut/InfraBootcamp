@@ -1,12 +1,9 @@
 #!/bin/bash
 
-sudo apt clean
-sudo apt --fix-broken install -y
-sudo apt install -y software-properties-common unzip curl
-sudo add-apt-repository -r ppa:ondrej/php -y
-sudo add-apt-repository ppa:ondrej/php -y
-sudo apt update
-sudo apt install -y mariadb-server php8.2 php8.2-mysql php8.2-gd php8.2-dom php8.2-curl php8.2-xml php8.2-mbstring php8.2-zip php8.2-json libapache2-mod-php8.2
+sudo apt install mariadb-server php php-mysql libapache2-mod-php php-xml php-gd php-mbstring php-curl php-zip php-json php-cli unzip -y
+
+sudo systemctl enable mariadb
+sudo systemctl start mariadb
 
 mysql -u root <<EOF
 CREATE DATABASE IF NOT EXISTS limdrupal;
