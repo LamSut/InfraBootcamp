@@ -18,7 +18,6 @@ sudo sed -i '/drupal\.local/d' /etc/hosts
 # sudo apt purge apache2 mariadb-server php8.3 php8.3-* libapache2-mod-php8.3 -y
 # sudo apt autoremove --purge -y
 
-# sudo systemctl reload apache2
 # sudo rm -rf /var/lib/mysql
 # sudo rm -rf /etc/mysql
 
