@@ -8,7 +8,8 @@ sudo rm -rf /var/www/lim2
 
 sudo rm -f /etc/apache2/sites-available/limsite.conf
 
-sudo sed -i '/127.0.0.1 lim1.com/d' /etc/hosts
-sudo sed -i '/127.0.0.1 lim2.com/d' /etc/hosts
+sudo sed -i '/lim1\.local/d' /etc/hosts
+sudo sed -i '/lim2\.local/d' /etc/hosts
+sudo sed -i '/drupal\.local/d' /etc/hosts
 
 echo "Remove complete!"
