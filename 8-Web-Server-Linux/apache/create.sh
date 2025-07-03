@@ -3,7 +3,7 @@ sudo apt install -y apache2
 
 sudo ./setup/lim1.sh
 sudo ./setup/lim2.sh
-# sudo ./setup/limdrupal.sh
+sudo ./setup/limdrupal.sh
 
 sudo cp setup/limsite.conf /etc/apache2/sites-available/limsite.conf
 
