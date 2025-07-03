@@ -1,11 +1,15 @@
 #!/bin/bash
 
-sudo apt install mariadb-server php php-mysql libapache2-mod-php php-xml php-gd php-mbstring php-curl php-zip php-json php-cli unzip -y
+# For Ubuntu 24.04 LTS
+sudo apt install mariadb-server php8.3 php8.3-mysql libapache2-mod-php8.3 php8.3-xml php8.3-gd php8.3-mbstring php8.3-curl php8.3-zip php8.3-json php8.3-cli unzip -y
+sudo a2dismod php*
+sudo a2enmod php8.3
+sudo systemctl restart apache2
 
 sudo systemctl enable mariadb
 sudo systemctl start mariadb
 
-mysql -u root <<EOF
+sudo mysql -u root <<EOF
 CREATE DATABASE IF NOT EXISTS limdrupal;
 CREATE USER 'limtruong'@'localhost' IDENTIFIED BY 'limdrupal@12345678';
 GRANT ALL PRIVILEGES ON limdrupal.* TO 'limtruong'@'localhost';

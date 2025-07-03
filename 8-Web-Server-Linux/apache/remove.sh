@@ -15,7 +15,7 @@ sudo sed -i '/drupal\.local/d' /etc/hosts
 
 # sudo systemctl stop apache2
 # sudo systemctl stop mariadb
-# sudo apt purge apache2 mariadb-server php php-mysql libapache2-mod-php php-xml php-gd php-mbstring php-curl php-zip php-json php-cli unzip -y
+# sudo apt purge apache2 mariadb-server php8.3 php8.3-* libapache2-mod-php8.3 -y
 # sudo apt autoremove --purge -y
 
 # sudo systemctl reload apache2
