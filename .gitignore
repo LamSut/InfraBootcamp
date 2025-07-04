@@ -45,5 +45,6 @@ terraform-output.txt
 # Report
 SA*
 
-# Git repo
+# Temporary files
 repo/
+backup/
