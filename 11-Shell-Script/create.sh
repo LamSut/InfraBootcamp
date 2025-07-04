@@ -6,21 +6,31 @@
 # sudo systemctl start mariadb
 # sudo systemctl enable mariadb
 
+mkdir -p "$(dirname "$0")/backup/src"
+mkdir -p "$(dirname "$0")/backup/db"
+echo "Backup directory created"
+
+if ! aws s3 ls "s3://limpizza-bucket" > /dev/null 2>&1; then
+    aws s3 mb "s3://limpizza-bucket" --region us-east-1
+    echo "S3 bucket created"
+fi
+
 # Source code & database
 git clone https://github.com/LamSut/PizzaGout repo
 sudo mysql -u root < repo/backend-api/src/database/pizza.sql
 echo "Database initialized"
 
 # Backup script
-mkdir -p backup
 cat << 'EOF' > backup/backup.sh
 #!/bin/bash
 
-mkdir -p "$(cd "$(dirname "$0")" && pwd)/src"
-tar -czf "$(cd "$(dirname "$0")" && pwd)/src/src-$(date +%F-%H%M%S).tar.gz" -C "$(cd "$(dirname "$0")" && pwd)/../repo" .
+# Backup local
+tar -czf "$(dirname "$0")/src/src-$(date +%F-%H%M%S).tar.gz" -C "$(dirname "$0")/../repo" .
+mysqldump -u root --routines --triggers --all-databases > "$(dirname "$0")/db/db-$(date +%F-%H%M%S).sql"
 
-mkdir -p "$(cd "$(dirname "$0")" && pwd)/db"
-mysqldump -u root --routines --triggers --all-databases > "$(cd "$(dirname "$0")" && pwd)/db/db-$(date +%F-%H%M%S).sql"
+# Additional upload to S3 (need AWS CLI configured for root user)
+aws s3 cp "$(cd "$(dirname "$0")" && pwd)/src/$(ls -t "$(cd "$(dirname "$0")" && pwd)/src" | head -n1)" s3://limpizza-bucket/src/
+aws s3 cp "$(cd "$(dirname "$0")" && pwd)/db/$(ls -t "$(cd "$(dirname "$0")" && pwd)/db" | head -n1)" s3://limpizza-bucket/db/
 EOF
 
 chmod +x backup/backup.sh
@@ -53,5 +63,5 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl start backup.timer
 sudo systemctl enable --now backup.timer
-sudo systemctl start backup.service
+# sudo systemctl start backup.service
 echo "Systemd service and timer created"
