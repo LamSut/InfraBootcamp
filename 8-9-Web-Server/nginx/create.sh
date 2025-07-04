@@ -8,6 +8,7 @@ sudo systemctl enable nginx
 sudo systemctl start nginx
 
 sudo cp setup/limsite.conf /etc/nginx/sites-available/limsite.conf
+sudo ln -s /etc/nginx/sites-available/limsite.conf /etc/nginx/sites-enabled/
 
 sudo ./setup/lim1.sh
 sudo cp ../lim1.html /var/www/lim1/

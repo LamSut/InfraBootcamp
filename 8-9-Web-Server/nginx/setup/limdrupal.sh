@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # For Ubuntu 24.04 LTS
-sudo apt install mariadb-server php8.3 php8.3-fpm php8.3-mysql php8.3-xml php8.3-gd php8.3-mbstring php8.3-curl php8.3-zip php8.3-json php8.3-cli unzip -y
+sudo apt install mariadb-server php8.3 php8.3-mysql -y
+sudo apt install php8.3-xml php8.3-gd php8.3-mbstring php8.3-curl php8.3-zip php8.3-cli unzip -y
+sudo apt install php8.3-fpm -y
 sudo systemctl enable php8.3-fpm
 sudo systemctl start php8.3-fpm
 
@@ -30,5 +32,3 @@ sudo chmod 775 /var/www/drupal/sites/default
 if ! grep -q "drupal.local" /etc/hosts; then
     echo "127.0.0.1 drupal.local" >> /etc/hosts
 fi
-
-sudo nginx -t && sudo systemctl reload nginx
