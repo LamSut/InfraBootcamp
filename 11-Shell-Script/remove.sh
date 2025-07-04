@@ -7,8 +7,7 @@ sudo rm -f /etc/systemd/system/backup.service
 sudo rm -f /etc/systemd/system/backup.timer
 sudo systemctl daemon-reload
 
-rm -f backup.sh
-rm -rf backup/
+sudo rm -rf backup/
 rm -rf repo
 
 # sudo systemctl stop mariadb
