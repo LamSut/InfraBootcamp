@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# For Ubuntu 24.04 LTS
 sudo rm -f /etc/nginx/sites-enabled/drupal.local
 sudo rm -f /etc/nginx/sites-enabled/limsite.conf
 sudo rm -f /etc/nginx/sites-available/drupal.local

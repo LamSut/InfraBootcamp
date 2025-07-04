@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sudo mkdir -p /var/www/lim1
 
 sudo chown -R www-data:www-data /var/www/lim1

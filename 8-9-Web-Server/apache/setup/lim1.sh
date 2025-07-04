@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sudo mkdir -p /var/www/lim1
 
 sudo chown -R $USER:$USER /var/www/lim1

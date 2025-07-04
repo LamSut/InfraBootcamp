@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# For Ubuntu 24.04 LTS
 sudo a2dissite limsite.conf
 sudo systemctl reload apache2
 

@@ -1,3 +1,6 @@
+#!/bin/bash
+
+# For Ubuntu 24.04 LTS
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y apache2
 
