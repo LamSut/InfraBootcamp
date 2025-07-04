@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # For Ubuntu 24.04 LTS
-sudo apt install mariadb-server php8.3 php8.3-mysql libapache2-mod-php8.3 php8.3-xml php8.3-gd php8.3-mbstring php8.3-curl php8.3-zip php8.3-json php8.3-cli unzip -y
+sudo apt install mariadb-server php8.3 php8.3-mysql -y
+sudo apt install php8.3-xml php8.3-dom php8.3-gd php8.3-mbstring php8.3-curl php8.3-zip php8.3-cli unzip -y
+sudo apt install libapache2-mod-php8.3 -y
 sudo a2dismod php*
 sudo a2enmod php8.3
 sudo systemctl restart apache2
