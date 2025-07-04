@@ -1,4 +1,4 @@
-# For Microsoft Windows 11 Home
+# For Microsoft Windows 11 Home (open PowerShell as Administrator)
 
 powershell -ExecutionPolicy Bypass -File .\setup\lim1.ps1
 powershell -ExecutionPolicy Bypass -File .\setup\lim2.ps1

@@ -1,4 +1,4 @@
-# For Microsoft Windows 11 Home
+# For Microsoft Windows 11 Home (open PowerShell as Administrator)
 
 Import-Module WebAdministration
 
