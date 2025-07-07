@@ -24,7 +24,8 @@ resource "aws_instance" "amazon" {
   associate_public_ip_address = false # we will use EIP
 
   tags = {
-    Name = "Lim Truong Amazon Linux ${each.key}"
+    Name   = "limtruong-${each.key}"
+    Backup = "true"
   }
 }
 
@@ -38,3 +39,4 @@ resource "aws_eip" "amazon_eip" {
     Name = "amazon-eip-${each.key}"
   }
 }
+

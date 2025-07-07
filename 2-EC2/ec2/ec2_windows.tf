@@ -24,7 +24,8 @@ resource "aws_instance" "windows" {
   associate_public_ip_address = false
 
   tags = {
-    Name = "Lim Truong Windows ${each.key}"
+    Name   = "limtruong-${each.key}"
+    Backup = "true"
   }
 }
 

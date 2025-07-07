@@ -25,7 +25,8 @@
 #   associate_public_ip_address = false
 
 #   tags = {
-#     Name = "Lim Truong Ubuntu ${each.key}"
+#     Name = "limtruong-${each.key}"
+#     Backup = "true"
 #   }
 # }
 
