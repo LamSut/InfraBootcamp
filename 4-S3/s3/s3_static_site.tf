@@ -37,6 +37,8 @@ resource "aws_s3_bucket_public_access_block" "public_static_site" {
 resource "aws_s3_bucket_policy" "static_site_policy" {
   bucket = aws_s3_bucket.static_site.id
   policy = file("${path.module}/s3_static_policy.json")
+
+  depends_on = [aws_s3_bucket_public_access_block.public_static_site]
 }
 
 resource "aws_s3_bucket_website_configuration" "static_web_config" {
