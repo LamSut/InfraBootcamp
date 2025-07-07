@@ -14,7 +14,7 @@ resource "aws_db_parameter_group" "mysql_params" {
 
   parameter {
     name  = "log_output"
-    value = "TABLE"
+    value = "FILE" // Options: FILE or TABLE
   }
 
   parameter {
