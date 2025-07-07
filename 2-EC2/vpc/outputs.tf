@@ -155,8 +155,3 @@ output "security_group_egress_rules" {
   description = "Egress rules for each security group"
   value       = { for sg_name, sg in aws_security_group.security_groups : sg_name => sg.egress }
 }
-
-output "sg_icmp_rule_ids" {
-  description = "IDs for the ICMP security group rules"
-  value       = { for key, rule in aws_security_group_rule.sg_icmp : key => rule.id }
-}

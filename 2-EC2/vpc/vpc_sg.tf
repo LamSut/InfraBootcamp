@@ -53,13 +53,3 @@ resource "aws_security_group_rule" "egress_rules" {
   protocol          = each.value.protocol
   cidr_blocks       = each.value.cidr_blocks
 }
-
-resource "aws_security_group_rule" "sg_icmp" {
-  for_each                 = toset(["sg_linux", "sg_windows"])
-  type                     = "ingress"
-  from_port                = -1
-  to_port                  = -1
-  protocol                 = "icmp"
-  security_group_id        = aws_security_group.security_groups[each.value].id
-  source_security_group_id = aws_security_group.security_groups[each.value].id
-}
