@@ -49,11 +49,11 @@ EOF
 
 cat << EOF | sudo tee /etc/systemd/system/backup.timer > /dev/null
 [Unit]
-Description=Run backup script every minute
+Description=Run backup script every hour
 
 [Timer]
-OnBootSec=15s
-OnUnitActiveSec=15s
+OnBootSec=1h
+OnUnitActiveSec=1h
 Persistent=true
 
 [Install]
