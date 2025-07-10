@@ -12,13 +12,12 @@ TOP_URLS=$5      # Number of top URLs to display
 # Check required args
 if [ $# -lt 5 ]; then
   echo "Usage: $0 <start_time> <end_time> <date> <top_ips> <top_urls>"
-  echo "Example: $0 13:00 14:00 09/Jul/2025 10 15"
+  echo "Example: $0 08:00 17:00 09/Jul/2025 10 15"
   exit 1
 fi
 
 echo "Log file: $LOG_FILE"
 echo "Time range: $START_TIME to $END_TIME on $DATE"
-echo "Top $TOP_IPS IPs | Top $TOP_URLS URLs"
 
 # Create a temporary file for filtered logs
 FILTERED=$(mktemp)
