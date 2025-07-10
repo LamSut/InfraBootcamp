@@ -63,6 +63,7 @@ rfkill unblock wifi
 
 # Trace the route packets take to a destination
 traceroute google.com
+
 # Real-time traceroute with packet loss and latency stats
 mtr -rw google.com
 
