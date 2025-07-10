@@ -48,3 +48,4 @@ SA*
 # Temporary files
 repo/
 backup/
+certs
