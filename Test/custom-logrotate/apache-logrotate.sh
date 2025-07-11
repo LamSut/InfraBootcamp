@@ -1,6 +1,5 @@
 #!/bin/bash
 
-chmod +x apache-logrolate.sh
 LOGROTATE_CONF="/etc/logrotate.d/apache2"
 
 cat << 'EOF' | sudo tee "$LOGROTATE_CONF" > /dev/null
