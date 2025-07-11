@@ -3,6 +3,16 @@
 # WARNING: THIS SCRIPT WILL REMOVE ALL RESOURCES
 # Usage: chmod 755 rm.sh && ./rm.sh
 
+if grep -q "limdrupal.local" /etc/hosts; then
+    sudo sed -i.bak '/limdrupal.local/d' /etc/hosts
+    echo "Removed 'limdrupal.local' from /etc/hosts"
+fi
+
+if [ -d "certs" ]; then
+    rm -rf certs
+    echo "Removed certificates"
+fi
+
 echo "Stopping all running containers..."
 docker stop $(docker ps -aq) 2>/dev/null || echo "No running containers to stop."
 

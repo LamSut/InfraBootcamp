@@ -6,8 +6,8 @@ mkdir -p certs
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout certs/privkey.pem \
   -out certs/fullchain.pem \
-  -subj "/C=US/ST=Local/L=Local/O=Local/OU=Local/CN=limdrupal.local"s
+  -subj "/C=VN/ST=CT/L=CT/O=BE/OU=BECT/CN=limdrupal.local"s
 
-docker-compose up -d
+docker compose up -d
 
 
