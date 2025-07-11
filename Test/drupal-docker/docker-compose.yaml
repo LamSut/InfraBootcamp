@@ -1,7 +1,8 @@
 services:
   db:
-    image: mariadb:10.5
+    image: mariadb:10.5 # MariaDB 10.5
     restart: always
+    # Environment variables for MySQL config
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
@@ -11,21 +12,21 @@ services:
       - db_data:/var/lib/mysql
 
   drupal:
-    image: drupal:10-apache
+    image: drupal:10-apache # Drupal 10 with Apache
     restart: always
     ports:
-      - "80:80"
-      - "443:443"
+      - "80:80"   # HTTP
+      - "443:443" # HTTPS
     volumes:
-      - drupal-data:/var/www/html
-      - ./certs:/etc/apache2/ssl:ro
-      - ./apache/drupal.conf:/etc/apache2/sites-enabled/000-default.conf:ro
+      - drupal-data:/var/www/html     # Drupal code and files
+      - ./certs:/etc/apache2/ssl:ro   # SSL certs from the host
+      - ./apache/drupal.conf:/etc/apache2/sites-enabled/000-default.conf:ro # Apache config from the host
     depends_on:
-      - db
+      - db  # Ensure database is ready before Drupal starts
+    # Ensure Apache uses the SSL module
     command: >
-      bash -c "a2enmod ssl && apache2-foreground"
-
+      bash -c "a2enmod ssl && apache2-foreground" 
 
 volumes:
-  drupal-data:
-  db_data:
+  drupal-data:  # Volume to persist Drupal data
+  db_data:      # Volume to persist MySQL data
