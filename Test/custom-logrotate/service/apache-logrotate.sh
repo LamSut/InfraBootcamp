@@ -10,8 +10,8 @@ cat << 'EOF' | sudo tee "$LOGROTATE_CONF" > /dev/null
     # Do not error if the log file is missing
     missingok
 
-    # Keep 30 old log files
-    rotate 30
+    # Keep 7 old log files
+    rotate 7
 
     # Compress old versions of log files with gzip
     compress
