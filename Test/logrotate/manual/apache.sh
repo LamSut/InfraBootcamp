@@ -1,35 +1,22 @@
 #!/bin/bash
 
-# Commands with full paths
-FIND=$(which find)
-GZIP=$(which gzip)
-MOVE=$(which mv)
-TRUNCATE=$(which truncate)
-REMOVE=$(which rm)
-SYSTEMCTL=$(which systemctl)
+# Ubuntu 24.04
+APACHE_CONF="/etc/apache2/sites-available/000-default.conf"
+ROTATELOGS="/usr/bin/rotatelogs"
+ACCESS_LOG="/var/log/apache2/access_log.%Y%m%d"
+ERROR_LOG="/var/log/apache2/error_log.%Y%m%d"
+ROTATE_INTERVAL=86400
 
-LOG_DIR="/var/log/apache2"          # Directory where Apache logs are stored
-ACCESS_LOG="$LOG_DIR/access.log"    # Path to the access log
-ERROR_LOG="$LOG_DIR/error.log"      # Path to the error log
-DATE=$(date +%Y%m%d)                # Current date in YYYYMMDD format
+# Backup original config
+cp "$APACHE_CONF" "${APACHE_CONF}.bak"
 
-# Remove old compressed logs older than 7 days
-$FIND "$LOG_DIR" -type f -name "*.gz" -mtime +7 -exec $REMOVE -f {} \;
-
-# Rotate Apache access logs with gzip compression then truncate the original logs
-if [ -s "$ACCESS_LOG" ]; then
-    $GZIP -c "$ACCESS_LOG" > "$ACCESS_LOG-$DATE.gz"
-    $TRUNCATE -s 0 "$ACCESS_LOG"
-fi
-
-# Rotate Apache error logs with gzip compression then truncate the original logs
-if [ -s "$ERROR_LOG" ]; then
-    $GZIP -c "$ERROR_LOG" > "$ERROR_LOG-$DATE.gz"
-    $TRUNCATE -s 0 "$ERROR_LOG"
-fi
+# Replace ErrorLog and CustomLog lines
+sed -i \
+    -e "s#^\s*ErrorLog.*#\tErrorLog \"|$ROTATELOGS $ERROR_LOG $ROTATE_INTERVAL\"#" \
+    -e "s#^\s*CustomLog.*#\tCustomLog \"|$ROTATELOGS $ACCESS_LOG $ROTATE_INTERVAL\" combined#" \
+    "$APACHE_CONF"
 
 # Reload Apache to apply changes
-$SYSTEMCTL reload apache2
+systemctl reload apache2
 
-# Remove old compressed logs older than 7 days
-$FIND "$LOG_DIR" -type f -name "*.gz" -mtime +7 -exec $REMOVE -f {} \;
+echo "Log rotation config updated in $APACHE_CONF."
