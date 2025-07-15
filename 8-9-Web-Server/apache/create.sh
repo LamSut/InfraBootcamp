@@ -18,6 +18,7 @@ sudo ./setup/limdrupal.sh
 sudo cp setup/limsite.conf /etc/apache2/sites-available/limsite.conf
 
 sudo a2ensite limsite.conf
+sudo a2enmod headers
 sudo a2enmod rewrite
 sudo systemctl reload apache2
 
